@@ -12,13 +12,74 @@ output information.
 
 ## First Glance at Data
 
+``` r
+load("~/Dropbox/Raman/In preparation/Drafts/denti/fitting/gcf.RData")
+spc
+```
+
+    ## hyperSpec object
+    ##    70 spectra
+    ##    49 data columns
+    ##    1999 data points / spectrum
+    ## wavelength: paste("Raman shift (", cm^-1, ")", sep = "") [numeric] -184.37 -181.83 ... 3270.66 
+    ## data:  (70 rows x 49 columns)
+    ##    1. spc: Intensity (a.u.) [matrix, array1999] 17.59814 32.06528 ... 17.48172 
+    ##    2. laser: laser [integer] 785 785 ... 785 
+    ##    3. power: power [integer] 10 10 ... 10 
+    ##    4. patient: patient [character] X10 X10 ... X7 
+    ##    5. tooth: tooth [character] 11 13 ... 36 
+    ##    6. sample: sample [character] X10_11 X10_13 ... X7_36 
+    ##    7. .aggregate:  [factor] X10_11 X10_13 ... X7_36 
+    ##    8. ID: ID [character] X10_11 X10_13 ... X7_36 
+    ##    9. Batch:  [numeric] 1 1 ... 1 
+    ##    10. Estrazione:  [numeric] 0 0 ... 0 
+    ##    11. Conservazione:  [numeric] 0 0 ... 0 
+    ##    12. Dente:  [numeric] 11 13 ... 36 
+    ##    13. Tipo dente:  [numeric] 3 3 ... 1 
+    ##    14. Lato:  [numeric] 1 1 ... 2 
+    ##    15. Sup/Inf:  [numeric] 1 1 ... 2 
+    ##    16. Genere:  [numeric] 1 1 ... 0 
+    ##    17. Età:  [numeric] 57 57 ... 44 
+    ##    18. Gravidanza:  [character] / / ... 0 
+    ##    19. Fase mestruale:  [character] / / ... 21 
+    ##    20. Fumo:  [numeric] 0 0 ... 0 
+    ##    21. Patologie sistemiche:  [numeric] 0 0 ... 2 
+    ##    22. Assunzione farmaci:  [numeric] 1 1 ... 2 
+    ##    23. Sondaggio DV:  [numeric] 2 2 ... 6 
+    ##    24. Placca DV:  [numeric] 1 1 ... 1 
+    ##    25. BoP DV:  [numeric] 0 0 ... 1 
+    ##    26. Sondaggio V:  [numeric] 2 2 ... 3 
+    ##    27. Placca V:  [numeric] 0 1 ... 0 
+    ##    28. BoP V:  [numeric] 0 0 ... 0 
+    ##    29. Sondaggio MV:  [numeric] 3 3 ... 4 
+    ##    30. Placca MV:  [numeric] 1 1 ... 1 
+    ##    31. BoP MV:  [numeric] 0 0 ... 1 
+    ##    32. Sondaggio DL:  [numeric] 2 3 ... 3 
+    ##    33. Placca DL:  [numeric] 1 1 ... 1 
+    ##    34. BoP DL:  [numeric] 1 1 ... 1 
+    ##    35. Sondaggio L:  [numeric] 2 3 ... 3 
+    ##    36. Placca L:  [numeric] 0 0 ... 1 
+    ##    37. BoP L:  [numeric] 0 0 ... 1 
+    ##    38. Sondaggio ML:  [numeric] 2 3 ... 4 
+    ##    39. Placca ML:  [numeric] 1 1 ... 1 
+    ##    40. BoP ML:  [numeric] 0 0 ... 1 
+    ##    41. Diagnosi:  [character] Gingivitis    Periodontitis ... Periodontitis 
+    ##    42. PSR 1:  [character] 4 4 ... 4 
+    ##    43. PSR 2:  [character] 3 3 ... 3 
+    ##    44. PSR 3:  [numeric] 4 4 ... 4 
+    ##    45. PSR 4:  [character] 3 3 ... 4 
+    ##    46. PSR 5:  [numeric] 3 3 ... 3 
+    ##    47. PSR 6:  [numeric] 4 4 ... 4 
+    ##    48. age: age [character] over 40 over 40 ... over 40 
+    ##    49. class: class [numeric] 1 2 ... 2
+
 ### First Glance at Spectra
 
 ``` r
 plot (spc) #raw spectra
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ``` r
 #View(spc$..) #metadata
@@ -47,7 +108,7 @@ spc.low <- sweep (spc.low, 1, factors, "/")
 plot(spc.low, col=as.factor(spc.low$Diagnosi))
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ## Spectral fitting
 
@@ -67,7 +128,7 @@ spcmet <- sweep (spcmet, 1, factor, "/")
 plot(spcmet, stacked=T)
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ``` r
 medspc <- apply(spc.low$spc, 2, median) #obtain median GFC spectrum
@@ -133,7 +194,7 @@ lines(spcmet@wavelength, spcmet[1]$spc * coef(myfit)[1] + off*0,
       col=rgb(0,0,0,1))# pure components
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 # PCA
 
@@ -143,7 +204,7 @@ row.names(myPCA$scores)<-(spc.low$ID)
 scoreplot(myPCA, pc= c(1,4),show.names = T,pch=19)
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 myloadings <- decomposition (spc.low[], t(myPCA$loadings), scores = FALSE,
@@ -156,7 +217,7 @@ myscores <- decomposition (spc.low[], myPCA$scores, label.wavelength = "PC",
 plot(myloadings[c(1:6)], stacked=T)
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
 
 ``` r
 response<-data.frame("PC.1"=myscores[,,1]$spc, class=spc.low$class)
@@ -223,10 +284,10 @@ p5<-ggboxplot(response, x = "class", y = "PC") +
 p1
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-7-3.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
 
 ``` r
 p5
 ```
 
-![](s4a_files/figure-gfm/unnamed-chunk-7-4.png)<!-- -->
+![](s4a_files/figure-gfm/unnamed-chunk-8-4.png)<!-- -->
